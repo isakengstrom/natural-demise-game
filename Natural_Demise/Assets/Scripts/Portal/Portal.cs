@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour {
     private PortalManager _portalManager;
+    private GameObject _player;
     
     private Collider _collider;
     private MeshRenderer _meshRenderer;
@@ -16,7 +17,7 @@ public class Portal : MonoBehaviour {
     
     private void Start() {
         _portalManager = FindObjectOfType<PortalManager>();
-        
+        _player = GameObject.FindWithTag("Player");
         
         //_isPortalLocked=true;
         //StartCoroutine(WaitAndUnlock(PortalLockTimer));
@@ -36,6 +37,7 @@ public class Portal : MonoBehaviour {
 
     private void _activatePortal() {
         _collider.enabled = true;
+        _collider.isTrigger = true;
         _meshRenderer.enabled = true;
         
         foreach (Transform child in transform)
@@ -43,27 +45,32 @@ public class Portal : MonoBehaviour {
     }
 
     private void _deactivatePortal() {
+        _collider.isTrigger = false;
         _collider.enabled = false;
         _meshRenderer.enabled = false;
         
         foreach (Transform child in transform)
             child.gameObject.SetActive(false);
     }
-
-    //Lock the portal for waitTime seconds to give everything time to be instantiated
-    /*
-    private IEnumerator WaitAndUnlock(float waitTime) {
-        yield return new WaitForSeconds(waitTime);
-        _isPortalLocked=false;
+    private void OnTriggerEnter(Collider other) {
+        StartCoroutine(TeleportOther(other));
+        /*
+        if (other.gameObject.CompareTag("Player")) {
+            _player.transform.position = _portalManager.GetNextTelePosition() + _teleHeight; 
+            //print(other.transform.position);'
+            
+        }
+        */
     }
-    */  
-    private void OnTriggerEnter(Collider collision) {
-        if (collision.gameObject.CompareTag("Player"))
-            collision.transform.position = _portalManager.GetNextTelePosition() + _teleHeight;
 
-        /*if (!_isPortalLocked) {
-            col.transform.position = _portalManager.GetNextTelePosition() + new Vector3(0f,10f,0f);    
-        }*/
+
+    private IEnumerator TeleportOther(Collider other) {
+        if (other.gameObject.CompareTag("Player")) {
+            other.transform.position = _portalManager.GetNextTelePosition() + _teleHeight;
+        } 
+        yield return new WaitForSeconds(0.1f);
+
+        print("Coroutine passed");
     }
     
     

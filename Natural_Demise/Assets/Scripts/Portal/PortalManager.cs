@@ -13,41 +13,23 @@ public class PortalManager : MonoBehaviour
     private Storm _storm;
     private WindDirection _windDirection;
     
-    [SerializeField] private GameObject portal;
+    [SerializeField] public GameObject portal;
     private GameObject _portalClone;
-    
-    //private int[] _portalTag = new int[8];
-
-    private void Awake() {
-        //TODO 
-        // _portalTag[0, 0] = transform.parent.name;
-    }
 
     private void Start() {
         _setUpPortals();
-        
         _findIslandOrigins();
-        
-        
+
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
         _storm = _windCenter.GetComponent<Storm>();
         _windDirection = _storm.GetComponent<WindDirection>();
 
         _nextIslandIndex = 1;
-
-        
-
     }
 
     public Vector3 GetNextTelePosition() {
-        print("Next Index: "+_nextIslandIndex);
-        if (_nextIslandIndex < _islandAmount) {
-            _setWindCenter(_islandGlobalOrigins[_nextIslandIndex]);
-            return _islandLocalOrigins[_nextIslandIndex++];
-        }
-            
-            
-        return _islandLocalOrigins[0];
+        _setWindCenter(_islandGlobalOrigins[_nextIslandIndex % 8]); 
+        return _islandLocalOrigins[_nextIslandIndex++ % 8];
     }
 
     private void _setWindCenter(Vector3 pos) {
@@ -56,7 +38,6 @@ public class PortalManager : MonoBehaviour
         _storm.SetStormCenterPosition(correctedPos);
         
         //_windCenter.transform.parent = transform.GetChild(_nextIslandIndex).transform;
-        
     }
     
     private void _findIslandOrigins() {

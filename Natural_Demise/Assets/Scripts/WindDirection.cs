@@ -54,8 +54,8 @@ public class WindDirection : MonoBehaviour
 
         Invoke(nameof(_setWindDirectionAndInvokeSmall), 1.0f);
         Invoke(nameof(_setWindDirectionAndInvokeMedium), 1.0f);
-        Invoke(nameof(_setWindDirectionAndInvokeBig), 1.0f);
-        //Invoke(nameof(_setWindDirectionAndInvokeBig), 20.0f);
+        Invoke(nameof(_setWindDirectionAndInvokeBig), 1.0f); //Sped up setting used for debugging
+        //Invoke(nameof(_setWindDirectionAndInvokeBig), 20.0f); //Original setting
     }
 
     private void Update() {
