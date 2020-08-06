@@ -5,23 +5,13 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour {
     private PortalManager _portalManager;
-    //private GameObject _player;
-    
     private Collider _collider;
     private MeshRenderer _meshRenderer;
-    private readonly Vector3 _teleHeight = new Vector3(0f,20f,0f);
+    
+    private readonly Vector3 _teleportOffset = new Vector3(0f,10f,0f);
 
-    //private const float PortalLockTimer = 10f;
-    //private bool _isPortalLocked;
-    
-    
     private void Start() {
         _portalManager = FindObjectOfType<PortalManager>();
-        //_player = GameObject.FindWithTag("Player");
-        
-        //_isPortalLocked=true;
-        //StartCoroutine(WaitAndUnlock(PortalLockTimer));
-
         _collider = GetComponent<Collider>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
@@ -29,42 +19,37 @@ public class Portal : MonoBehaviour {
     }
 
     private void Update() {
-        
         if (Input.GetButtonDown("Jump")) _activatePortal();
         if (Input.GetButtonDown("Fire2")) _deactivatePortal();
     }
 
     private void _activatePortal() {
-        _collider.enabled = true;
-        _collider.isTrigger = true;
-        _meshRenderer.enabled = true;
-        
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(true);
+        _changePortalState(true);
     }
 
     private void _deactivatePortal() {
-        _collider.isTrigger = false;
-        _collider.enabled = false;
-        _meshRenderer.enabled = false;
+        _changePortalState(false);
+    }
+
+    private void _changePortalState(bool state) {
+        _collider.isTrigger = state;
+        _collider.enabled = state;
+        _meshRenderer.enabled = state;
         
         foreach (Transform child in transform)
-            child.gameObject.SetActive(false);
+            child.gameObject.SetActive(state);
     }
+    
     private void OnTriggerEnter(Collider other) {
         StartCoroutine(TeleportOther(other));
     }
-
-
+    
     private IEnumerator TeleportOther(Collider other) {
-        if (other.gameObject.CompareTag("Player")) {
-            //other.transform.TransformPoint(Vector3.zero);
-            other.transform.position = _portalManager.GetNextTelePosition(transform.parent.parent.name) + _teleHeight;
-            print("Collision with player");
-        }
-        else {
-            print("Collision with: " + other);
-        }
+        if (other.gameObject.CompareTag("Player"))
+            other.transform.position = _portalManager.GetNextTelePosition(transform.parent.parent.name) + _teleportOffset;
+        
+        print("Collision with: " + other);
+        
         yield return new WaitForSeconds(0.1f);
     }
 }

@@ -27,17 +27,14 @@ public class PortalManager : MonoBehaviour
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
         _storm = _windCenter.GetComponent<Storm>();
         _windDirection = _storm.GetComponent<WindDirection>();
-
-        _nextIslandIndex = 1;
     }
 
     public Vector3 GetNextTelePosition(string portalName) {
         var isPortalIdFound = false;
-        for (var i = 0; i < _portalClones.Length; i++) {
-            if (portalName == _portalClones[i].name) {
-                _nextIslandIndex = (i+1) % _islandAmount;
-                isPortalIdFound = true;
-            }
+        for (var i = 0; i < _islandAmount; i++) {
+            if (_portalClones[i].name != portalName) continue;
+            _nextIslandIndex = (i+1) % _islandAmount;
+            isPortalIdFound = true;
         }
 
         if (!isPortalIdFound) _nextIslandIndex = 0;
@@ -65,7 +62,7 @@ public class PortalManager : MonoBehaviour
     private void _setUpPortals() {
         _portalClones = new GameObject[_islandAmount];
 
-        for (var i = 0; i < _portalClones.Length; i++) {
+        for (var i = 0; i < _islandAmount; i++) {
             _portalClones[i] = (GameObject) Instantiate(portal, transform.GetChild(i));
             _portalClones[i].name = "portal" + i;
         }
