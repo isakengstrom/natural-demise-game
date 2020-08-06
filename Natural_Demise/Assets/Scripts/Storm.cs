@@ -43,6 +43,8 @@ public class Storm : MonoBehaviour {
         _spawnPlane.GetComponent<Collider>().enabled = false;
         */
 
+        
+
         Invoke(nameof(AddParticles), _particleSpawnTimer);
         Invoke(nameof(AddDebris), _particleSpawnTimer);
     }

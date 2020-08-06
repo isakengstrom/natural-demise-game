@@ -5,14 +5,19 @@ using UnityEngine;
 public class WindParticleMotor : BaseMotor {
     private float _timer = 0.0f;
     private float _initialDirection;// = (Random.Range(0, 2) * 2 - 1);
+
+    private Collider _collider;
     protected override void Construct() {
         Mass = 0.05f;//Random.Range(0.03f, 0.09f);
         _initialDirection = (Random.Range(0, 2) * 2 - 1);
+        _collider = GetComponent<Collider>();
     }
 
     protected override void SetState() {
         state = gameObject.AddComponent<FlyingState>();
         controller.detectCollisions = false;
+        _collider.enabled = false;
+
     }
 
     protected override void UpdateMotor() {

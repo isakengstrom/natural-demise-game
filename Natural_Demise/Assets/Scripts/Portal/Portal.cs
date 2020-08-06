@@ -66,11 +66,16 @@ public class Portal : MonoBehaviour {
 
     private IEnumerator TeleportOther(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
+            other.transform.TransformPoint(Vector3.zero);
             other.transform.position = _portalManager.GetNextTelePosition() + _teleHeight;
-        } 
+            print("Collision with player");
+        }
+        else {
+            print("Collision with: " + other);
+        }
         yield return new WaitForSeconds(0.1f);
 
-        print("Coroutine passed");
+        
     }
     
     

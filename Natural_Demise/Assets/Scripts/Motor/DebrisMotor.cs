@@ -13,7 +13,7 @@ public class DebrisMotor : BaseMotor {
 
     protected override void SetState() {
         state = gameObject.AddComponent<RollingState>();
-        //controller.detectCollisions = false;
+        controller.detectCollisions = false;
     }
 
     protected override void UpdateMotor() {

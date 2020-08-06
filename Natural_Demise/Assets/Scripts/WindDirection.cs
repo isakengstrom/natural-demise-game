@@ -99,8 +99,8 @@ public class WindDirection : MonoBehaviour
     }
 
     private void _setWindDirectionAndInvokeBig() {
-        //smoothStepTime[2] = Random.Range(45.0f, 65.0f);
-        smoothStepTime[2] = Random.Range(2.0f, 5.0f);
+        smoothStepTime[2] = Random.Range(45.0f, 65.0f);
+        //smoothStepTime[2] = Random.Range(2.0f, 5.0f);
 
         oldWind[2] = newWind[2];
         newWind[2] = Random.Range(oldWind[2] - (7 * Mathf.PI / 6), oldWind[2] + (7 * Mathf.PI / 6));

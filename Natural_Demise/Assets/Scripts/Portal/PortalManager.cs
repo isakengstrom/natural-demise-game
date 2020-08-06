@@ -28,8 +28,8 @@ public class PortalManager : MonoBehaviour
     }
 
     public Vector3 GetNextTelePosition() {
-        _setWindCenter(_islandGlobalOrigins[_nextIslandIndex % 8]); 
-        return _islandLocalOrigins[_nextIslandIndex++ % 8];
+        _setWindCenter(_islandGlobalOrigins[_nextIslandIndex % 7]); 
+        return _islandLocalOrigins[_nextIslandIndex++ % 7];
     }
 
     private void _setWindCenter(Vector3 pos) {
