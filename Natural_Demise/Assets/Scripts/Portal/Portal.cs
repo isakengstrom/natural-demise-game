@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour {
     private PortalManager _portalManager;
-    private GameObject _player;
+    //private GameObject _player;
     
     private Collider _collider;
     private MeshRenderer _meshRenderer;
-    private readonly Vector3 _teleHeight = new Vector3(0f,20f,0f); 
+    private readonly Vector3 _teleHeight = new Vector3(0f,20f,0f);
 
     //private const float PortalLockTimer = 10f;
     //private bool _isPortalLocked;
@@ -17,15 +17,14 @@ public class Portal : MonoBehaviour {
     
     private void Start() {
         _portalManager = FindObjectOfType<PortalManager>();
-        _player = GameObject.FindWithTag("Player");
+        //_player = GameObject.FindWithTag("Player");
         
         //_isPortalLocked=true;
         //StartCoroutine(WaitAndUnlock(PortalLockTimer));
 
         _collider = GetComponent<Collider>();
-        _meshRenderer = GetComponent<MeshRenderer>();    
-        
-        
+        _meshRenderer = GetComponent<MeshRenderer>();
+
         _deactivatePortal();
     }
 
@@ -54,29 +53,18 @@ public class Portal : MonoBehaviour {
     }
     private void OnTriggerEnter(Collider other) {
         StartCoroutine(TeleportOther(other));
-        /*
-        if (other.gameObject.CompareTag("Player")) {
-            _player.transform.position = _portalManager.GetNextTelePosition() + _teleHeight; 
-            //print(other.transform.position);'
-            
-        }
-        */
     }
 
 
     private IEnumerator TeleportOther(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
-            other.transform.TransformPoint(Vector3.zero);
-            other.transform.position = _portalManager.GetNextTelePosition() + _teleHeight;
+            //other.transform.TransformPoint(Vector3.zero);
+            other.transform.position = _portalManager.GetNextTelePosition(transform.parent.parent.name) + _teleHeight;
             print("Collision with player");
         }
         else {
             print("Collision with: " + other);
         }
         yield return new WaitForSeconds(0.1f);
-
-        
     }
-    
-    
 }
