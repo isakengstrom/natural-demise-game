@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class WindParticleMotor : BaseMotor {
     private float _timer = 0.0f;
-    private float _initialDirection;// = (Random.Range(0, 2) * 2 - 1);
+    private float _initialDirection;
 
-    private Collider _collider;
     protected override void Construct() {
         Mass = 0.05f;//Random.Range(0.03f, 0.09f);
-        _initialDirection = (Random.Range(0, 2) * 2 - 1);
-        _collider = GetComponent<Collider>();
+        _initialDirection = (Random.Range(0, 2) * 2 - 1); //Basically, if its original direction is left or right. 
     }
 
     protected override void SetState() {
         state = gameObject.AddComponent<FlyingState>();
         controller.detectCollisions = false;
-        _collider.enabled = false;
-
     }
 
     protected override void UpdateMotor() {
@@ -34,9 +30,7 @@ public class WindParticleMotor : BaseMotor {
         //RotationQuaternion = state.ProcessRotation(MoveVector);
         //Check if we should change current state
         state.Transition();
-
-        //MoveVector += storm.test() / Mass; 
-
+        
         //Move 
         Move();
 

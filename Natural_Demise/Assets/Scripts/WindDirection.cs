@@ -9,7 +9,7 @@ public class WindDirection : MonoBehaviour
 
     private Vector3 _windDirection;
     private GameObject _windSphere;
-    //private GameObject _windSpawnPoint;
+    private GameObject _windSpawnPoint;
     private float _windRadius = 100f;
 
     private float[] oldWind = new float[3];
@@ -38,16 +38,17 @@ public class WindDirection : MonoBehaviour
         _windSphere.GetComponent<Collider>().enabled = false;
         _windSphere.GetComponent<Renderer>().enabled = false;
         */
-
-        _force = GameObject.FindObjectOfType<WindForce>();
-        _storm = GameObject.FindObjectOfType<Storm>();
-
-/*
+        
+        /*
         _windSpawnPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         _windSpawnPoint.GetComponent<Collider>().enabled = false;
         _windSpawnPoint.GetComponent<Renderer>().enabled = false;
         _windSpawnPoint.transform.position = Vector3.zero;
-  */      
+        */
+
+        _force = GameObject.FindObjectOfType<WindForce>();
+        _storm = GameObject.FindObjectOfType<Storm>();
+
         _rayStartingPoint = Vector3.zero;
 
         StormCenterPosition = Vector3.zero;

@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DebrisMotor : BaseMotor {
-    private float _initialDirection;
 
     protected override void Construct() {
-        Mass = 0.125f;//Random.Range(0.03f, 0.09f);
-        _initialDirection = (Random.Range(0, 2) * 2 - 1);
-        tag = "Debris";
+        Mass = Random.Range(0.125f, 0.135f);
+        gameObject.transform.localScale *= Mass * 5f;
+
+        //gameObject.tag = "Debris";   
     }
 
     protected override void SetState() {
         state = gameObject.AddComponent<RollingState>();
-        controller.detectCollisions = false;
+        controller.detectCollisions = false; //Collisions are detected through a collider instead
     }
 
     protected override void UpdateMotor() {
-        //timer += Time.deltaTime;
 
         //Get input
         MoveVector = WindDirection;

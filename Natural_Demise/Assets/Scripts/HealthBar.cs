@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour {
 
     [SerializeField]
-    private Image foregroundImage;
+    public Image foregroundImage;
 
     private readonly float _updateSpeedSeconds = 0.2f;
 

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -3953712680327775697}
   m_Layer: 0
   m_Name: debris_1.0
-  m_TagString: Untagged
+  m_TagString: Debris
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

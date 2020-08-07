@@ -8,6 +8,7 @@ TagManager:
   - Debris
   - Portal
   - WindCenter
+  - Whirlwind
   layers:
   - Default
   - TransparentFX

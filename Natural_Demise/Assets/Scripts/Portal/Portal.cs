@@ -8,7 +8,7 @@ public class Portal : MonoBehaviour {
     private Collider _collider;
     private MeshRenderer _meshRenderer;
     
-    private readonly Vector3 _teleportOffset = new Vector3(0f,10f,0f);
+    private readonly Vector3 _teleportOffset = new Vector3(0f,15f,0f);
 
     private void Start() {
         _portalManager = FindObjectOfType<PortalManager>();

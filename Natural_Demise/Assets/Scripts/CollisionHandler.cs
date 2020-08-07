@@ -6,6 +6,7 @@ public class CollisionHandler : MonoBehaviour {
 
     private CharacterMotor _cm;
 
+    
     private void Start() {
 
         _cm = GameObject.FindObjectOfType<CharacterMotor>();
@@ -18,9 +19,14 @@ public class CollisionHandler : MonoBehaviour {
         if (!collision.gameObject.CompareTag("Player")) return;
         
         if (gameObject.CompareTag("Debris")) {
-            _cm.UpdateHealth(-5);
+            _cm.UpdateHealth(-5f);
         }
-        else if (gameObject.CompareTag("HealthPack")) {
+
+        if (gameObject.CompareTag("Whirlwind")) {
+            _cm.UpdateHealth(-10f);
+        }
+        
+        if (gameObject.CompareTag("HealthPack")) {
             _cm.UpdateHealth(1);
         }
 
