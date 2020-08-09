@@ -24,11 +24,7 @@ public class DebrisMotor : BaseMotor {
         //Send input to a filter 
         MoveVector = state.ProcessMotion(MoveVector);
 
-        //MoveVector += Quaternion.AngleAxis(90, Vector3.up) * MoveVector * Mathf.Sin(timer * Random.Range(0.7f, 1.3f)) / 3 * initialDirection;
-
         RotationQuaternion = state.ProcessRotation(MoveVector);
-
-        //RotationQuaternion = transform.Rotate(Vector3.left, 45 * Time.deltaTime * Speed);
 
         //Check if we should change current state
         state.Transition();

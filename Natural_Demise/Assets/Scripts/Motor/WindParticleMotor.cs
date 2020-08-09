@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class WindParticleMotor : BaseMotor {
     private float _timer = 0.0f;
-    private float _initialDirection;
+    private int _initialDirection;
+    
 
     protected override void Construct() {
         Mass = 0.05f;//Random.Range(0.03f, 0.09f);
@@ -25,7 +26,7 @@ public class WindParticleMotor : BaseMotor {
         //Send input to a filter 
         MoveVector = state.ProcessMotion(MoveVector);
 
-        MoveVector += Quaternion.AngleAxis(90, Vector3.up) * MoveVector * Mathf.Sin(_timer * Random.Range(0.7f, 1.3f)) / 3 * _initialDirection;
+        MoveVector += Quaternion.AngleAxis(90, Vector3.up) * MoveVector * Mathf.Sin(_timer) / 3 * _initialDirection;
 
         //RotationQuaternion = state.ProcessRotation(MoveVector);
         //Check if we should change current state
