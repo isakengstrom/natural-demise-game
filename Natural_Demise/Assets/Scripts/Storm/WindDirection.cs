@@ -20,16 +20,8 @@ public class WindDirection : MonoBehaviour
 
 
     private Vector3 _rayStartingPoint;
-    private float _timeSinceStarted;
-    private float _smoothPercentage;
-
-    public Vector3 StormCenterPosition { get; set; }
-
-
-    private void Awake() {
     
-        //Debug.Log(force.GetInstanceID());
-    }
+    public Vector3 StormCenterPosition { get; set; }
 
     private void Start() {
         /*
@@ -52,6 +44,8 @@ public class WindDirection : MonoBehaviour
         _rayStartingPoint = Vector3.zero;
 
         StormCenterPosition = Vector3.zero;
+
+        smoothStepTime = new[] {1f, 1f, 1f};
 
         Invoke(nameof(_setWindDirectionAndInvokeSmall), 1.0f);
         Invoke(nameof(_setWindDirectionAndInvokeMedium), 1.0f);
@@ -123,11 +117,9 @@ public class WindDirection : MonoBehaviour
         return _rayStartingPoint;
     }
 
-    private float SmoothFloat(float startValue, float endValue, float smoothTime, float sTime) {
-
-        _timeSinceStarted = Time.time - sTime;
-        _smoothPercentage = _timeSinceStarted / smoothTime;
-
-        return Mathf.SmoothStep(startValue, endValue, _smoothPercentage);
+    private static float SmoothFloat(float startValue, float endValue, float smoothTime, float sTime) {
+        var  smoothPercentage = (Time.time - sTime) / smoothTime;
+        
+        return Mathf.SmoothStep(startValue, endValue, smoothPercentage);
     }
 }

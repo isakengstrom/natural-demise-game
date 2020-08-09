@@ -51,12 +51,16 @@ public class Storm : MonoBehaviour {
         _spawnPlane.transform.localScale = new Vector3(_spawnPlaneWidth, 10.0f, 1.0f);
         _spawnPlane.GetComponent<Collider>().enabled = false;
         */
+
+        
+        
         
         Invoke(nameof(AddParticles), _particleSpawnTimer);
         Invoke(nameof(AddDebris), _debrisSpawnTimer);
         Invoke(nameof(AddWhirlWinds), _whirlwindSpawnTimer);
     }
 
+    
     private void AddDebris() {
         _debrisSpawnTimer = Random.Range(1f, 2f);
 
