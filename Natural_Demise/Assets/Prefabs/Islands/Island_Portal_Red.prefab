@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 807028099557693355}
   - component: {fileID: 807028099557693352}
   m_Layer: 0
-  m_Name: PortalBlueParticles
+  m_Name: PortalParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +401,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.008543986, g: 0.503905, b: 0.9056604, a: 1}
+      maxColor: {r: 0.90588236, g: 0.11203045, b: 0.007843122, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5055,7 +5055,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 072ce840f81ac0e42a09c5c1d7fb7553, type: 2}
+  - {fileID: 2100000, guid: e98b514133a2c9b4a8dbf9623c1c17cd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5128,7 +5128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 807028099712530544}
   m_Layer: 0
-  m_Name: Island_Portal
+  m_Name: Island_Portal_Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5208,7 +5208,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 072ce840f81ac0e42a09c5c1d7fb7553, type: 2}
+  - {fileID: 2100000, guid: e98b514133a2c9b4a8dbf9623c1c17cd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

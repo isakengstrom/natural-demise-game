@@ -14,10 +14,13 @@ public class PortalManager : MonoBehaviour
     private Storm _storm;
     private WindDirection _windDirection;
     
-    [SerializeField] public GameObject portal;
+    [SerializeField] public GameObject portalBegin;
+    [SerializeField] public GameObject portalNormal;
+    [SerializeField] public GameObject portalEnd;
+    private GameObject _portalChoice; 
     private GameObject[] _portalClones;
-    private GameObject _portalClone;
-
+    
+    
     private void Start() {
         _islandAmount = transform.childCount;
 
@@ -63,7 +66,11 @@ public class PortalManager : MonoBehaviour
         _portalClones = new GameObject[_islandAmount];
 
         for (var i = 0; i < _islandAmount; i++) {
-            _portalClones[i] = (GameObject) Instantiate(portal, transform.GetChild(i));
+            if (i == 0) _portalChoice = portalBegin;
+            else if (i == _islandAmount - 1) _portalChoice = portalEnd;
+            else _portalChoice = portalNormal;
+            
+            _portalClones[i] = (GameObject) Instantiate(_portalChoice, transform.GetChild(i));
             _portalClones[i].name = "portal" + i;
         }
     }

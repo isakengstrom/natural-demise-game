@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BluePortalFace
+  m_Name: GreenPortalFace
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _EMISSION
   m_LightmapFlags: 0
@@ -74,6 +74,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.10196078, g: 0.30087897, b: 1, a: 0.68235296}
-    - _EmissionColor: {r: 0, g: 0.19371724, b: 1, a: 1}
+    - _Color: {r: 0.0814231, g: 0.7075472, b: 0.043864112, a: 0.68235296}
+    - _EmissionColor: {r: 0.0074990317, g: 0.45641106, b: 0.0033465356, a: 1}
   m_BuildTextureStacks: []
