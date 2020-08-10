@@ -50,6 +50,6 @@ public class Portal : MonoBehaviour {
         
         print("Collision with: " + other);
         
-        yield return new WaitForSeconds(0.1f);
+        yield return null;
     }
 }
