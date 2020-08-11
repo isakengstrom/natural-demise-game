@@ -22,8 +22,6 @@ public class PlayerMotor : CharacterMotor {
         //ph = gameObject.AddComponent<PlayerHealth>();
     }
 
-    
-
     protected override void UpdateMotor() {
         //Get input
         MoveVector = InputDirection();

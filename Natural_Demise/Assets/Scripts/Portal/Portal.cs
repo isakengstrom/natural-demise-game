@@ -4,30 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Portal : MonoBehaviour {
-    private PortalManager _portalManager;
+    
     private Collider _collider;
     private MeshRenderer _meshRenderer;
-    
-    private readonly Vector3 _teleportOffset = new Vector3(0f,15f,0f);
+    private LevelManager _levelManager;
 
     private void Start() {
-        _portalManager = FindObjectOfType<PortalManager>();
+        _levelManager = FindObjectOfType<LevelManager>();
         _collider = GetComponent<Collider>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
-        _deactivatePortal();
+        DeactivatePortal();
     }
 
     private void Update() {
-        if (Input.GetButtonDown("Jump")) _activatePortal();
-        if (Input.GetButtonDown("Fire2")) _deactivatePortal();
+        if (Input.GetButtonDown("Jump")) ActivatePortal();
+        if (Input.GetButtonDown("Fire2")) DeactivatePortal();
     }
 
-    private void _activatePortal() {
+    public void ActivatePortal() {
         _changePortalState(true);
     }
 
-    private void _deactivatePortal() {
+    private void DeactivatePortal() {
         _changePortalState(false);
     }
 
@@ -41,13 +40,14 @@ public class Portal : MonoBehaviour {
     }
     
     private void OnTriggerEnter(Collider other) {
-        StartCoroutine(TeleportOther(other));
+        StartCoroutine(TeleportObject(other));
     }
     
-    private IEnumerator TeleportOther(Collider other) {
+    private IEnumerator TeleportObject(Collider other) {
         if (other.gameObject.CompareTag("Player"))
-            other.transform.position = _portalManager.GetNextTelePosition(transform.parent.parent.name) + _teleportOffset;
-        
+            _levelManager.SignalPlayerTeleportation(transform.parent.parent.name);
+        else 
+            _levelManager.TeleportOther(other);
         print("Collision with: " + other);
         
         yield return null;

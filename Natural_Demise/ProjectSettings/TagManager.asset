@@ -9,6 +9,7 @@ TagManager:
   - Portal
   - WindCenter
   - Whirlwind
+  - LevelManager
   layers:
   - Default
   - TransparentFX
