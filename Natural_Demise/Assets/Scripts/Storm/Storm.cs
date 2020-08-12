@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Storm : MonoBehaviour {
+    private bool _isStormActive; 
+    
     private WindDirection _direction;
     private WindForce _force;
 
@@ -28,6 +30,7 @@ public class Storm : MonoBehaviour {
     private Vector3 _whirlwindSpawnOffset;
     public GameObject whirlwind;
     private GameObject _whirlwindClone;
+    public StormCloudController stormCloud;
     
     private void Awake() {
         _direction = gameObject.AddComponent<WindDirection>();
@@ -35,6 +38,8 @@ public class Storm : MonoBehaviour {
     }
 
     private void Start() {
+        stormCloud = GetComponent<StormCloudController>();
+        _isStormActive = false;
 
         _particleSpawnTimer = 2.0f;
         _particleSpawnOffset = new Vector3(0.0f,1.0f,0.0f);
@@ -44,24 +49,25 @@ public class Storm : MonoBehaviour {
         
         _whirlwindSpawnTimer = 2.0f;
         _whirlwindSpawnOffset = new Vector3(0.0f, 0.0f, 0.0f);
-
-        /*
-        //Initialize a plane for debugging, helps to see how big the spawn area for the wind is.
-        _spawnPlane = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        _spawnPlane.transform.localScale = new Vector3(_spawnPlaneWidth, 10.0f, 1.0f);
-        _spawnPlane.GetComponent<Collider>().enabled = false;
-        */
-
-        
-        
-        
-        Invoke(nameof(AddParticles), _particleSpawnTimer);
-        Invoke(nameof(AddDebris), _debrisSpawnTimer);
-        Invoke(nameof(AddWhirlWinds), _whirlwindSpawnTimer);
     }
 
+    public void ActivateStorm() {
+        _isStormActive = true;
+        
+        _invokeStorm();
+    }
+
+    public void DeactivateStorm() {
+        _isStormActive = false;
+    }
     
-    private void AddDebris() {
+    private void _invokeStorm() {
+        Invoke(nameof(_addDebris), _debrisSpawnTimer);
+        Invoke(nameof(_addWhirlWinds), _whirlwindSpawnTimer);
+        Invoke(nameof(_addParticles), _particleSpawnTimer);
+    }
+
+    private void _addDebris() {
         _debrisSpawnTimer = Random.Range(1f, 2f);
 
         _debrisSpawnOffset.x = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
@@ -70,10 +76,10 @@ public class Storm : MonoBehaviour {
         _debrisClone = (GameObject)Instantiate(debris, _direction.GetWindStartingPoint() + _debrisSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), debris.transform.rotation, transform);
         Destroy(_debrisClone, 20);
 
-        Invoke(nameof(AddDebris), _debrisSpawnTimer);
+        if (_isStormActive) Invoke(nameof(_addDebris), _debrisSpawnTimer);
     }
     
-    private void AddWhirlWinds() {
+    private void _addWhirlWinds() {
         _whirlwindSpawnTimer = Random.Range(1f, 2f);
 
         _whirlwindSpawnOffset.x = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
@@ -83,10 +89,10 @@ public class Storm : MonoBehaviour {
         _whirlwindClone = (GameObject) Instantiate(whirlwind, _direction.GetWindStartingPoint() + _whirlwindSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), whirlwind.transform.rotation, transform);
         Destroy(_whirlwindClone, 20);
 
-        Invoke(nameof(AddWhirlWinds), _whirlwindSpawnTimer);
+        if (_isStormActive) Invoke(nameof(_addWhirlWinds), _whirlwindSpawnTimer);
     }
 
-    private void AddParticles() {
+    private void _addParticles() {
         _particleSpawnTimer = Random.Range(0.2f, 0.3f);
 
         _particleSpawnOffset.x = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
@@ -99,18 +105,11 @@ public class Storm : MonoBehaviour {
             Destroy(_particleClone, 3);
         }
 
-        Invoke(nameof(AddParticles), _particleSpawnTimer);
+        if (_isStormActive) Invoke(nameof(_addParticles), _particleSpawnTimer);
     }
 
-   
     public void SetStormCenterPosition(Vector3 pos) {
         _direction.StormCenterPosition = pos;
     }
-    /*
-    public void windDirectionChange() {
-        Debug.Log("Major change in wind direction.");
-        CancelInvoke("DestroyParticle");
-        Invoke("DestroyParticle", 3.0f);
-    }
-    */
+  
 }

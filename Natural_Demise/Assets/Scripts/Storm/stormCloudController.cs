@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 
-public class stormCloudController : MonoBehaviour {
+public class StormCloudController : MonoBehaviour {
     
     public GameObject stormCloud;
     private float _stormCloudScaleMultiplierWhenHidden = 300f;
@@ -29,7 +29,7 @@ public class stormCloudController : MonoBehaviour {
         StartCoroutine(ScaleStormCloud(_stormCloudScaleWhenHidden, _stormCloudScaleWhenVisible, _stormCloudScaleTime));
     }
     
-    public void EnlargeStormCloud() {
+    public void ExpandStormCloud() {
         StartCoroutine(ScaleStormCloud(_stormCloudScaleWhenVisible, _stormCloudScaleWhenHidden, _stormCloudScaleTime));
     }
 
@@ -40,6 +40,7 @@ public class stormCloudController : MonoBehaviour {
             stormCloud.transform.localScale = Vector3.Lerp(originalScale, targetScale, currentTime / sTime);
             currentTime += Time.deltaTime;
             yield return null;
+            
         } 
     }
 }

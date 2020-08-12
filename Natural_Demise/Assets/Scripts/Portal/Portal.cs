@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Portal : MonoBehaviour {
-    
     private Collider _collider;
     private MeshRenderer _meshRenderer;
     private LevelManager _levelManager;
@@ -16,8 +15,9 @@ public class Portal : MonoBehaviour {
 
         DeactivatePortal();
     }
-
+    
     private void Update() {
+        //For debugging purposes:
         if (Input.GetButtonDown("Jump")) ActivatePortal();
         if (Input.GetButtonDown("Fire2")) DeactivatePortal();
     }
@@ -31,7 +31,6 @@ public class Portal : MonoBehaviour {
     }
 
     private void _changePortalState(bool state) {
-        _collider.isTrigger = state;
         _collider.enabled = state;
         _meshRenderer.enabled = state;
         
@@ -48,7 +47,6 @@ public class Portal : MonoBehaviour {
             _levelManager.SignalPlayerTeleportation(transform.parent.parent.name);
         else 
             _levelManager.TeleportOther(other);
-        print("Collision with: " + other);
         
         yield return null;
     }

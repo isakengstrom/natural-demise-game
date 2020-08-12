@@ -1,56 +1,84 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
 public class LevelManager : MonoBehaviour {
-    public Vector3[] IslandGlobalOrigins => _islandGlobalOrigins; 
-  
-    public int IslandAmount => _islandAmount;
-    public int NextIslandIndex => _nextIslandIndex; 
+    // Round parameters
+    private readonly float countdownTilRound = 3f;
+    private readonly float countdownTilRoundEnds = 15f;
+    private readonly float countdownTilPortalActive = 3f;
     
+    // Island Parameters
     private Vector3[] _islandGlobalOrigins;
     private int _islandAmount;
     private int _nextIslandIndex;
     private int _currentIslandIndex;
-
-    private GameObject _windCenter;
-    private Storm _storm;
-    private WindDirection _windDirection;
-
+    
+    // Portal parameters
     [SerializeField] public GameObject portalBegin;
     [SerializeField] public GameObject portalNormal;
     [SerializeField] public GameObject portalEnd;
+    
     private GameObject _portalChoice; 
     private GameObject[] _portalClones;
     private Portal[] _portalClonesScripts;
+    private readonly Vector3 _teleportOffset = new Vector3(0f,15f,0f);
 
+    // Storm parameters
+    private GameObject _windCenter;
+    private Storm _storm;
+    private WindDirection _windDirection;
+    private StormCloudController _stormCloud;
+
+    // Player parameters 
     private GameObject _player;
-    private readonly Vector3 _pLayerTeleportOffset = new Vector3(0f,15f,0f);
-
+    private BaseMotor _baseMotor;
+    
     private void Start() {
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
         _storm = _windCenter.GetComponent<Storm>();
         _windDirection = _storm.GetComponent<WindDirection>();
+        _stormCloud = _storm.stormCloud;
+        
         _player = GameObject.FindGameObjectWithTag("Player");
+        _baseMotor = _player.GetComponent<BaseMotor>();
 
         _findIslandOrigins();
         _setUpPortals();
+
+        Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
+    }
+    
+    private IEnumerator _fullRound() {
         
-        Invoke(nameof(_activateCurrentPortal),3f);
+        yield return new WaitForSeconds(countdownTilRound);
+        _startRound();
+        
+        yield return new WaitForSeconds(countdownTilRoundEnds);
+        _endRound();
+    }
+
+    private void _startRound() {
+        _stormCloud.ShrinkStormCloud();
+        _storm.ActivateStorm();
+        print("roundstart");
+    }
+
+    private void _endRound() {
+        _stormCloud.ExpandStormCloud();
+        _storm.DeactivateStorm();
+        Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
 
     private void _setUpPortals() {
-        _portalClones = new GameObject[IslandAmount];
-        _portalClonesScripts = new Portal[IslandAmount];
+        _portalClones = new GameObject[_islandAmount];
+        _portalClonesScripts = new Portal[_islandAmount];
         
         _currentIslandIndex = 0;
         _nextIslandIndex = 1;
-        for (var i = 0; i < IslandAmount; i++) {
+        for (var i = 0; i < _islandAmount; i++) {
             if (i == 0) _portalChoice = portalBegin;
-            else if (i == IslandAmount - 1) _portalChoice = portalEnd;
+            else if (i == _islandAmount - 1) _portalChoice = portalEnd;
             else _portalChoice = portalNormal;
             
             _portalClones[i] = (GameObject) Instantiate(_portalChoice, transform.GetChild(i));
@@ -65,6 +93,8 @@ public class LevelManager : MonoBehaviour {
         _teleportPlayer();
         _setWindCenter();
 
+        StartCoroutine(_fullRound());
+
         _currentIslandIndex = _nextIslandIndex;
     }
 
@@ -73,9 +103,9 @@ public class LevelManager : MonoBehaviour {
     }
     private void _setNextPortalIndex(string portalName) {
         var isPortalIdFound = false;
-        for (var i = 0; i < IslandAmount; i++) {
+        for (var i = 0; i < _islandAmount; i++) {
             if (_portalClones[i].name != portalName) continue;
-            _nextIslandIndex = (i+1) % IslandAmount;
+            _nextIslandIndex = (i+1) % _islandAmount;
             isPortalIdFound = true;
         }
 
@@ -83,7 +113,10 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void _teleportPlayer() {
-        _player.transform.position = _islandGlobalOrigins[_nextIslandIndex] + _pLayerTeleportOffset;
+        //Temporarily disable the characterController to not conflict with the change of position (teleport).
+        _baseMotor.DisableController();
+        _player.transform.position = _islandGlobalOrigins[_nextIslandIndex] + _teleportOffset;
+        _baseMotor.EnableController();
     }
 
     public void TeleportOther(Collider other) {
@@ -96,6 +129,7 @@ public class LevelManager : MonoBehaviour {
         
         for (var i = 0; i < _islandAmount; i++) {
             _islandGlobalOrigins[i] = transform.GetChild(i).transform.position;
+            transform.GetChild(i).name = "island" + i;
         }
     }
 
@@ -104,13 +138,4 @@ public class LevelManager : MonoBehaviour {
         _windCenter.transform.position = correctedPos;
         _storm.SetStormCenterPosition(correctedPos);
     }
-    
-    
-    public Vector3 GetNextIslandOrigin(int i) {
-        
-        _setWindCenter();
-        return IslandGlobalOrigins[_nextIslandIndex];
-    }
-
-  
 }

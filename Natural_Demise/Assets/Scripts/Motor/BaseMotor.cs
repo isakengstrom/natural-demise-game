@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
 using UnityEngine;
@@ -7,7 +8,6 @@ public abstract class BaseMotor : MonoBehaviour {
 
     protected CharacterController controller;
     protected BaseState state; //reference state assigned to null
-    //protected Transform thisTransform;
 
     private RaycastHit _hit;
     private Vector3 _ray;
@@ -17,13 +17,12 @@ public abstract class BaseMotor : MonoBehaviour {
     protected WindDirection direction;
 
     protected float currentHealth;
-    public float Health { get { return currentHealth; } }
+    public float Health => currentHealth;
 
     private readonly float baseSpeed = 5.0f;
     private readonly float baseGravity = 25.0f;
     private readonly float baseJumpForce = 13.0f;
-    //private float baseMass = 10.0f; //float v = (F/rigidbody.mass)*Time.fixedDeltaTime;
-
+    
     private readonly float terminalVelocity = 30.0f;
     private readonly float groundRayDistance = 0.5f;
     private readonly float groundRayInnerOffset = 0.1f;
@@ -59,6 +58,12 @@ public abstract class BaseMotor : MonoBehaviour {
         controller = gameObject.AddComponent<CharacterController>();
     }
 
+    public void EnableController() {
+        controller.enabled = true;
+    }
+    public void DisableController() {
+        controller.enabled = false;
+    }
     protected virtual void Start() {
 
         Mass = 1.0f;
@@ -80,19 +85,12 @@ public abstract class BaseMotor : MonoBehaviour {
     protected virtual void SetState() {
         state = gameObject.AddComponent<IdleState>();
     }
-
-    public BaseState GetState() {
-        return state;
-    }
-
+    
     private void Update() {
         UpdateMotor();
 
         WindForce = force.GetWindForce();
         WindDirection = direction.GetWindDirection();
-
-        //Debug.Log(MoveVector);
-        //Debug.Log(MoveVector.magnitude);
     }
 
     protected virtual void Move() {
@@ -100,7 +98,6 @@ public abstract class BaseMotor : MonoBehaviour {
         //MoveVector += storm.test() / Mass * Time.fixedDeltaTime;
         //controller.Move((MoveVector + WindDirection * WindForce / Mass) * Time.deltaTime);
         //controller.Move(MoveVector);
-
         controller.Move(MoveVector * Time.deltaTime);
     }
 
