@@ -10,6 +10,7 @@ TagManager:
   - WindCenter
   - Whirlwind
   - LevelManager
+  - DestroyPostLoad
   layers:
   - Default
   - TransparentFX
