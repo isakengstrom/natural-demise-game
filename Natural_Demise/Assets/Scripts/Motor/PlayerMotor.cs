@@ -10,15 +10,14 @@ public class PlayerMotor : CharacterMotor {
     //public BaseHealth health;
 
     //public PlayerHealth ph;
-
-
+    
     protected override void Construct() {
-        startHealth = 30.0f;
-
+        startHealth = 4.0f;
+        Mass = 5.0f;
         base.Construct();
 
-        Mass = 5.0f;
         
+
         //ph = gameObject.AddComponent<PlayerHealth>();
     }
 

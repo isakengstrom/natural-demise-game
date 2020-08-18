@@ -10,4 +10,27 @@ public class LevelData {
     public LevelData(MainMenu mm) {
         roundHighscores = mm.roundHighscores;
     }
+
+    
+    public LevelData(int score) {
+        LevelData data = SaveSystem.LoadLevels();
+
+        roundHighscores = data.roundHighscores;
+        
+        if(score > roundHighscores[MainMenu.currentLevel])
+            roundHighscores[MainMenu.currentLevel] = score;
+    }
+    
 }
+/*
+[Serializable]
+public class SystemData {
+    public int saveCounter;
+
+    public SystemData(MainMenu mm) {
+        SystemData data = SaveSystem.LoadSystemData();
+
+        saveCounter = data.saveCounter;
+    }
+}
+*/

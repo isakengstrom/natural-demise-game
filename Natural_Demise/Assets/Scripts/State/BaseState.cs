@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class BaseState : MonoBehaviour
 {
     protected BaseMotor motor;
+    protected LevelManager levelManager;
+    
     //public WindForce force;
     protected float playerInputDirectionMagnitude;
     private const float WalkRunThreshold = 0.7f;
@@ -13,6 +15,7 @@ public abstract class BaseState : MonoBehaviour
 
     public virtual void Construct() {
         motor = GetComponent<BaseMotor>();
+        levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
     }
 
     public virtual void Destruct() {
@@ -65,6 +68,7 @@ public abstract class BaseState : MonoBehaviour
     #endregion
     
     private void Start() {
+        
         //force = GameObject.FindObjectOfType<WindForce>();//gameObject.AddComponent<WindForce>();
     }
 

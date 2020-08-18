@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
     // Round parameters
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour {
     private int _islandAmount;
     private int _nextIslandIndex;
     private int _currentIslandIndex;
+    public int roundData;
     
     // Portal parameters
     [SerializeField] public GameObject portalBegin;
@@ -34,6 +36,9 @@ public class LevelManager : MonoBehaviour {
     private GameObject _player;
     private BaseMotor _baseMotor;
     
+    //Misc
+    //private GameObject _signalObject;
+
     private void Start() {
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
         _storm = _windCenter.GetComponent<Storm>();
@@ -42,12 +47,24 @@ public class LevelManager : MonoBehaviour {
         
         _player = GameObject.FindGameObjectWithTag("Player");
         _baseMotor = _player.GetComponent<BaseMotor>();
+        
+        //_instantiateSignalObject();
 
         _findIslandOrigins();
         _setUpPortals();
 
         Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
+
+    /*
+    private void _instantiateSignalObject() {
+        _signalObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        _signalObject.GetComponent<Collider>().enabled = false;
+        _signalObject.GetComponent<Renderer>().enabled = false;
+        _signalObject.name = "SignalObject";
+        _signalObject.tag = "DestroyPostLoad";
+    }
+    */
     
     private IEnumerator _fullRound() {
         
@@ -89,13 +106,38 @@ public class LevelManager : MonoBehaviour {
     }
     
     public void SignalPlayerTeleportation(string portalName) {
+        _checkLevelWin(portalName);
+        
         _setNextPortalIndex(portalName);
         _teleportPlayer();
         _setWindCenter();
 
         StartCoroutine(_fullRound());
-
+        
         _currentIslandIndex = _nextIslandIndex;
+    }
+
+    private void _checkLevelWin(string portalName) {
+        if (_portalClones[_islandAmount - 1].name == portalName) {
+            _saveRounds();
+            //TODO: TRIGGER win GUI
+        }
+    }
+    
+
+    public void signalPlayerDeath() {
+        _saveRounds();
+        
+        //TODO: TRIGGER loose GUI
+    }
+
+    private void _saveRounds() { 
+        PlayerPrefs.SetInt("ROUNDSCOUNTER", _currentIslandIndex);
+    }
+
+    public void ToMainMenu() {
+        //DontDestroyOnLoad(_signalObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     private void _activateCurrentPortal() {

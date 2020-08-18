@@ -7,8 +7,8 @@ public class DyingState : BaseState
 
     public override void Construct() {
         base.Construct();
-
-        //TODO: End game when dying state is done
+        
+        levelManager.signalPlayerDeath();
     }
 
     public override Vector3 ProcessMotion(Vector3 input) {

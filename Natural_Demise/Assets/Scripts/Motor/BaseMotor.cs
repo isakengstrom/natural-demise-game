@@ -76,7 +76,7 @@ public abstract class BaseMotor : MonoBehaviour {
         state.Construct();
 
         anim = GetComponent<Animator>();
-
+        
         storm = GameObject.FindObjectOfType<Storm>();
         force = GameObject.FindObjectOfType<WindForce>();
         direction = GameObject.FindObjectOfType<WindDirection>();

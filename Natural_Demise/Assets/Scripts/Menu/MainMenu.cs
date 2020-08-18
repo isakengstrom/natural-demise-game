@@ -9,11 +9,13 @@ using UnityEngine.SceneManagement;
 //Source: https://www.youtube.com/watch?v=zc8ac_qUXQY
 public class MainMenu : MonoBehaviour {
    private int _levelsAmount;
-   private int _currentLevel;
+   public static int currentLevel;
    public static GameObject currentLevelIsland;
    
    public static int roundAmount;
+   public static int currentRound;
    public int[] roundHighscores;
+   private static int _saveCounter;
 
    [SerializeField] public GameObject level0;
    [SerializeField] public GameObject level1;
@@ -33,7 +35,8 @@ public class MainMenu : MonoBehaviour {
    
    private void Start() {
       _levelsAmount = 3;
-      _currentLevel = 0;
+      currentLevel = 0;
+      currentRound = 0;
       roundAmount = 10;
 
       _levels = new[] {level0, level1, level2};
@@ -44,43 +47,50 @@ public class MainMenu : MonoBehaviour {
       _levelText = GameObject.Find("LevelText").GetComponent<TextMeshProUGUI>();
       _roundText = GameObject.Find("RoundText").GetComponent<TextMeshProUGUI>();
       
+      roundHighscores = new int[_levelsAmount];
       
+      if(_isFirstTimeOpeningGame())
+         SaveLevels();
+      
+      LoadLevels();
+      
+      _updateScore();
       _updateUI();
       _instantiateLevels();
       _activateCurrentIsland();
    }
 
-
-   private void _updateUI() {
-      _checkArrowStatus();
-
-      _levelText.SetText($"Level: {_currentLevel + 1} / {_levelsAmount}");
-      _roundText.SetText($"Round: {_getRoundHighscore()}");
-   }
-
-   private string _getRoundHighscore() {
-   
-
-      return "foo";
-   }
-
-   private void _instantiateLevels() {
-      _levelClones = new GameObject[3];
-     
+   private void _updateScore() {
+      var lastPlayedLevel = PlayerPrefs.GetInt("LASTPLAYEDLEVEL", -1);
       
-      for (var i = 0; i < _levelsAmount; i++) {
-         _levelClones[i] = Instantiate(_levels[i], Vector3.zero, _levels[i].transform.rotation);
-         _levelClones[i].SetActive(false);
+      if (lastPlayedLevel >= 0 && lastPlayedLevel < _levelsAmount) {
+         currentLevel = lastPlayedLevel;
+         var lastPlayedLevelRoundCounter = PlayerPrefs.GetInt("ROUNDSCOUNTER", 0);
+
+         if (lastPlayedLevelRoundCounter > roundHighscores[lastPlayedLevel]) {
+            roundHighscores[lastPlayedLevel] = lastPlayedLevelRoundCounter;
+            SaveLevels();
+         }
       }
-      
-      //LoadLevels();
-      
    }
 
-   /*
-   public void LoadLevels() {
-      roundHighscores = new int[_levelsAmount];
+   private bool _isFirstTimeOpeningGame() {
+      if (PlayerPrefs.GetInt("FIRSTTIMEOPENING", 1) == 1) {
+         Debug.Log("First Time Opening");
+         
+         PlayerPrefs.SetInt("FIRSTTIMEOPENING", 0);
 
+         return true;
+      }
+      else {
+         Debug.Log("NOT First Time Opening");
+
+         return false;
+      }
+   }
+
+   public void LoadLevels() {
+      
       LevelData data = SaveSystem.LoadLevels();
 
       roundHighscores = data.roundHighscores;
@@ -89,26 +99,46 @@ public class MainMenu : MonoBehaviour {
    public void SaveLevels() {
       SaveSystem.SaveLevels(this);
    }
-   */
    
+
+   private void _updateUI() {
+      _checkArrowStatus();
+      print(roundHighscores.Length);
+      print(currentLevel);
+
+      _levelText.SetText($"Level: {currentLevel + 1} / {_levelsAmount}");
+      _roundText.SetText($"Round: {roundHighscores[currentLevel]} / {roundAmount}");
+   }
+   
+   private void _instantiateLevels() {
+      _levelClones = new GameObject[3];
+      
+      for (var i = 0; i < _levelsAmount; i++) {
+         _levelClones[i] = Instantiate(_levels[i], Vector3.zero, _levels[i].transform.rotation);
+         _levelClones[i].SetActive(false);
+      }
+   }
 
    private void _activateCurrentIsland() {
       for (var i = 0; i < _levelsAmount; i++) {
-         if (i == _currentLevel) _levelClones[i].SetActive(true);
+         if (i == currentLevel) _levelClones[i].SetActive(true);
          else _levelClones[i].SetActive(false);
       }
    }
    
    public void PlayGame() {
-      currentLevelIsland = _levelClones[_currentLevel];
+      PlayerPrefs.SetInt("LASTPLAYEDLEVEL", currentLevel);
+      
+      
+      currentLevelIsland = _levelClones[currentLevel];
       currentLevelIsland.tag = "DestroyPostLoad";
       DontDestroyOnLoad(currentLevelIsland);
       SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
    }
 
    public void LeftArrow() {
-      if (_currentLevel > 0) {
-         _currentLevel--;
+      if (currentLevel > 0) {
+         currentLevel--;
          _activateCurrentIsland();
       }
 
@@ -116,8 +146,8 @@ public class MainMenu : MonoBehaviour {
    }
 
    public void RightArrow() {
-      if (_currentLevel < _levelsAmount - 1) {
-         _currentLevel++;
+      if (currentLevel < _levelsAmount - 1) {
+         currentLevel++;
          _activateCurrentIsland();
       }
 
@@ -127,8 +157,8 @@ public class MainMenu : MonoBehaviour {
    private void _checkArrowStatus() {
       _leftArrowState = true;
       _rightArrowState = true;
-      if (_currentLevel >= _levelsAmount - 1) _rightArrowState = false;
-      else if (_currentLevel <= 0) _leftArrowState = false;
+      if (currentLevel >= _levelsAmount - 1) _rightArrowState = false;
+      else if (currentLevel <= 0) _leftArrowState = false;
 
       _leftButton.SetActive(_leftArrowState);
       _rightButton.SetActive(_rightArrowState);
