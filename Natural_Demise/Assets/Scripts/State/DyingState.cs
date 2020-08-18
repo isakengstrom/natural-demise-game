@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DyingState : BaseState
-{
+public class DyingState : BaseState {
 
     public override void Construct() {
         base.Construct();

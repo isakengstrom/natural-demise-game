@@ -35,9 +35,6 @@ public class LevelManager : MonoBehaviour {
     // Player parameters 
     private GameObject _player;
     private BaseMotor _baseMotor;
-    
-    //Misc
-    //private GameObject _signalObject;
 
     private void Start() {
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
@@ -48,23 +45,12 @@ public class LevelManager : MonoBehaviour {
         _player = GameObject.FindGameObjectWithTag("Player");
         _baseMotor = _player.GetComponent<BaseMotor>();
         
-        //_instantiateSignalObject();
 
         _findIslandOrigins();
         _setUpPortals();
 
         Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
-
-    /*
-    private void _instantiateSignalObject() {
-        _signalObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        _signalObject.GetComponent<Collider>().enabled = false;
-        _signalObject.GetComponent<Renderer>().enabled = false;
-        _signalObject.name = "SignalObject";
-        _signalObject.tag = "DestroyPostLoad";
-    }
-    */
     
     private IEnumerator _fullRound() {
         
@@ -129,14 +115,14 @@ public class LevelManager : MonoBehaviour {
         _saveRounds();
         
         //TODO: TRIGGER loose GUI
+        
     }
 
     private void _saveRounds() { 
         PlayerPrefs.SetInt("ROUNDSCOUNTER", _currentIslandIndex);
     }
 
-    public void ToMainMenu() {
-        //DontDestroyOnLoad(_signalObject);
+    public void LoadMenu() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

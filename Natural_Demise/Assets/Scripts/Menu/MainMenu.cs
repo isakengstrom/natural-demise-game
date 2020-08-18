@@ -107,7 +107,7 @@ public class MainMenu : MonoBehaviour {
       print(currentLevel);
 
       _levelText.SetText($"Level: {currentLevel + 1} / {_levelsAmount}");
-      _roundText.SetText($"Round: {roundHighscores[currentLevel]} / {roundAmount}");
+      _roundText.SetText($"Round: {roundHighscores[currentLevel] + 1} / {roundAmount}");
    }
    
    private void _instantiateLevels() {

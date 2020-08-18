@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//Following the tutorial provided by Brackeys on Youtube. 
-//Source: https://www.youtube.com/watch?v=JivuXdrIHK0 
-public class PauseMenu : MonoBehaviour {
+public class GameEndMenu : MonoBehaviour {
     public static bool isGamePaused = false;
     public GameObject pauseMenuUI;
 
@@ -16,11 +13,17 @@ public class PauseMenu : MonoBehaviour {
             else Pause();
         }
     }
-
+    
+    /*
     public void Resume() {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isGamePaused = false;
+    }
+    */
+
+    public void Restart() {
+        
     }
 
     public void Pause() {
