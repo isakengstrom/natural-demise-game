@@ -13,18 +13,11 @@ public class WalkingState : BaseState
 
     public override Vector3 ProcessMotion(Vector3 input) {
         playerInputDirectionMagnitude = input.magnitude;
-        //Debug.Log(input);
         ApplySpeed(ref input, motor.Speed); //in baseState
 
         return input;
     }
-    /*
-    public override Quaternion ProcessRotation(Vector3 input) {
-        //lastRotation = Quaternion.FromToRotation(Vector3.forward, input);
-        //return Quaternion.FromToRotation(Vector3.forward, input);
-        return Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(input.normalized), 0.35f);
-    }
-    */
+   
     public override void Transition() {
         CheckIdleState();
         CheckRunningState();

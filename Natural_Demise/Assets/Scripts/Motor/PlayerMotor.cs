@@ -1,16 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEngine.EventSystems;
 
+//Motor for the player
 public class PlayerMotor : CharacterMotor {
     public VirtualJoystick joystick;
     private Vector3 _dir = Vector3.zero;
-    //public BaseHealth health;
 
-    //public PlayerHealth ph;
-    
+    //Construct the specific player parameters. 
     protected override void Construct() {
         startHealth = 100.0f;
         Mass = 5.0f;
@@ -43,18 +41,13 @@ public class PlayerMotor : CharacterMotor {
 
     private Vector3 InputDirection() {
          _dir = Vector3.zero;
-
-        //dir.x = Input.GetAxis("Horizontal");
-        //dir.z = Input.GetAxis("Vertical");
-
+         
+         //Get input from the joystick.
         _dir.x = joystick.Horizontal();
         _dir.z = joystick.Vertical();
-
-
+        
         if (_dir.magnitude > 1f)
             _dir.Normalize();
-
-        //Debug.Log(_dir.magnitude);
 
         return _dir;
     }

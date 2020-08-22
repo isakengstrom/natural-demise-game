@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Health bar script, created following the tutorial by Jason Weimann: 
+// https://www.youtube.com/watch?v=CA2snUe7ARM
 public class HealthBar : MonoBehaviour {
 
     [SerializeField]

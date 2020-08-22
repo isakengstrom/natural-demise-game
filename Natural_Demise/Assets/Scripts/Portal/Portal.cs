@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Attached to each portal 
 public class Portal : MonoBehaviour {
     private Collider _collider;
     private MeshRenderer _meshRenderer;
@@ -14,12 +15,6 @@ public class Portal : MonoBehaviour {
         _meshRenderer = GetComponent<MeshRenderer>();
 
         DeactivatePortal();
-    }
-    
-    private void Update() {
-        //For debugging purposes:
-        if (Input.GetButtonDown("Jump")) ActivatePortal();
-        if (Input.GetButtonDown("Fire2")) DeactivatePortal();
     }
 
     public void ActivatePortal() {
@@ -38,16 +33,12 @@ public class Portal : MonoBehaviour {
             child.gameObject.SetActive(state);
     }
     
+    //Detect collisions with the portal, and call methods depending on the collider
     private void OnTriggerEnter(Collider other) {
-        StartCoroutine(TeleportObject(other));
-    }
-    
-    private IEnumerator TeleportObject(Collider other) {
         if (other.gameObject.CompareTag("Player"))
             _levelManager.SignalPlayerTeleportation(transform.parent.parent.name);
         else 
             _levelManager.TeleportOther(other);
-        
-        yield return null;
+
     }
 }

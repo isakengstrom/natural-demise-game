@@ -27,11 +27,8 @@ public class WhirlState : BaseState {
     }
 
 
-    public override Quaternion ProcessRotation(Vector3 input)
-    {
+    public override Quaternion ProcessRotation(Vector3 input) {
         var rotation = transform.rotation;
         return input != Vector3.zero ? Quaternion.LookRotation(input.normalized) : rotation;
-        //return input != Vector3.zero ? Quaternion.Lerp(rotation, Quaternion.LookRotation(input.normalized), 0.4f) : rotation;
-        //Quaternion.LookRotation(new Vector3(input.x, 0.0f, input.z).normalized);
     }
 }

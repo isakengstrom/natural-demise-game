@@ -57,6 +57,7 @@ public class LevelManager : MonoBehaviour {
         Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
     
+    //Invoke a full round
     private IEnumerator _fullRound() {
         
         yield return new WaitForSeconds(countdownTilRound);
@@ -66,17 +67,20 @@ public class LevelManager : MonoBehaviour {
         _endRound();
     }
 
+    //Start the round
     private void _startRound() {
         _stormCloud.ShrinkStormCloud();
         _storm.ActivateStorm();
     }
 
+    //End the round
     private void _endRound() {
         _stormCloud.ExpandStormCloud();
         _storm.DeactivateStorm();
         Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
 
+    //Set up the portals for all the islands
     private void _setUpPortals() {
         _portalClones = new GameObject[islandAmount];
         _portalClonesScripts = new Portal[islandAmount];
@@ -95,8 +99,9 @@ public class LevelManager : MonoBehaviour {
         }
     }
     
+    //Perform this method if the player uses a portal.
     public void SignalPlayerTeleportation(string portalName) {
-        _checkLevelWin(portalName);
+        _checkClearedChapter(portalName);
         
         _setNextPortalIndex(portalName);
         _teleportPlayer();
@@ -108,8 +113,8 @@ public class LevelManager : MonoBehaviour {
         currentIslandIndex = _nextIslandIndex;
     }
     
-    
-    private void _checkLevelWin(string portalName) {
+    //Check if the player has cleared the chapter
+    private void _checkClearedChapter(string portalName) {
         if (_portalClones[islandAmount - 1].name == portalName) {
             _saveRounds();
             _inGameMenu.ActivateWonMenu();
@@ -117,25 +122,24 @@ public class LevelManager : MonoBehaviour {
     }
     
 
+    //Perform this method if the player dies
     public void signalPlayerDeath() {
         _saveRounds();
         
         _inGameMenu.ActivateDeadMenu();
-        
-        
     }
 
+    //Save the rounds as a PlayerPref
     private void _saveRounds() { 
         PlayerPrefs.SetInt("ROUNDSCOUNTER", currentIslandIndex);
     }
 
-    public void LoadMenu() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-    }
-
+    //Active the portal to the next island
     private void _activateCurrentPortal() {
         _portalClonesScripts[currentIslandIndex].ActivatePortal();
     }
+    
+    //Set the next portal index
     private void _setNextPortalIndex(string portalName) {
         var isPortalIdFound = false;
         for (var i = 0; i < islandAmount; i++) {
@@ -147,6 +151,7 @@ public class LevelManager : MonoBehaviour {
         if (!isPortalIdFound) _nextIslandIndex = 0;
     }
 
+    //Teleport the player to the next island. 
     private void _teleportPlayer() {
         //Temporarily disable the characterController to not conflict with the change of position (teleport).
         _baseMotor.DisableController();
@@ -154,10 +159,12 @@ public class LevelManager : MonoBehaviour {
         _baseMotor.EnableController();
     }
 
+    //Teleport other objects that collides with the active portal
     public void TeleportOther(Collider other) {
         other.transform.position = _islandGlobalOrigins[_nextIslandIndex];
     }
     
+    //Get the origins of all the islands
     private void _findIslandOrigins() {
         islandAmount = transform.childCount;
         _islandGlobalOrigins = new Vector3[islandAmount];
@@ -168,6 +175,7 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
+    //Set the center for the storm/wind
     private void _setWindCenter() {
         var correctedPos = new Vector3(_islandGlobalOrigins[_nextIslandIndex].x, _windCenter.transform.position.y, _islandGlobalOrigins[_nextIslandIndex].z);
         _windCenter.transform.position = correctedPos;

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmoothCamera : MonoBehaviour
-{
+//Script to allow for smooth camera movement.
+public class SmoothCamera : MonoBehaviour {
     public Transform lookAt;
 
     private bool smooth = true;

@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseState : MonoBehaviour
-{
+public abstract class BaseState : MonoBehaviour {
+    
     protected BaseMotor motor;
     protected LevelManager levelManager;
     
-    //public WindForce force;
-    protected float playerInputDirectionMagnitude;
-    private const float WalkRunThreshold = 0.7f;
-
     #region baseState implementation 
 
     public virtual void Construct() {
@@ -22,14 +18,17 @@ public abstract class BaseState : MonoBehaviour
         Destroy(this);
     }
 
-    public virtual void Transition() {
-        
-    }
+    //Overridden to handle all possible combinations of state changes, depending on the current state.
+    //Uses the code in the "CheckStates implementation"
+    public virtual void Transition() { }
 
     #endregion
     
     #region CheckStates implementation
 
+    protected float playerInputDirectionMagnitude;
+    private const float WalkRunThreshold = 0.7f;
+    
     protected void CheckIdleState() {
         if (playerInputDirectionMagnitude < Mathf.Epsilon) 
             motor.ChangeState("IdleState");
@@ -67,24 +66,21 @@ public abstract class BaseState : MonoBehaviour
 
     #endregion
     
-    private void Start() {
-        
-        //force = GameObject.FindObjectOfType<WindForce>();//gameObject.AddComponent<WindForce>();
-    }
-
     public abstract Vector3 ProcessMotion(Vector3 input);
     
+    //Process rotations, only the rotation around the y axis is relevant
     public virtual Quaternion ProcessRotation(Vector3 input) {
-        if (new Vector3(input.x, 0.0f, input.z) != Vector3.zero)
-            //return Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(input.x, 0.0f, input.z).normalized), 0.3f);
-            //Quaternion.LookRotation(new Vector3(input.x, 0.0f, input.z).normalized);
-            return Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(new Vector3(input.x, 0.0f, input.z).normalized), 0.4f);
+        var rot = new Vector3(input.x, 0.0f, input.z);
+        
+        //Before calling the lerp between the two angles, check if there even is a rotation to process. 
+        if (rot != Vector3.zero)
+            return Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rot.normalized), 0.4f);
 
         return transform.rotation;
     }
 
     protected virtual void ApplySpeed(ref Vector3 input, float speed) {
-        input *= speed; // (speed + (force.getWindForce() / motor.Mass * Time.fixedDeltaTime));
+        input *= speed; 
     }
 
     protected void ApplyGravity(ref Vector3 input, float gravity) {

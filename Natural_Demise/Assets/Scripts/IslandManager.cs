@@ -15,14 +15,17 @@ public class IslandManager : MonoBehaviour {
         //_destroyPostLoad();
     }
 
+    //Move certain objects that are saved in-between scenes away from view.  
     private void _movePostLoad() {
         GameObject.FindGameObjectWithTag("MovePostLoad").transform.position = new Vector3(1000f,1000f,1000f);
     }
     
+    //Destroy certain objects that are saved in-between scenes after information has been extracted from them. 
     private void _destroyPostLoad() {
-        //Destroy(GameObject.FindGameObjectWithTag("DestroyPostLoad"));
+        Destroy(GameObject.FindGameObjectWithTag("DestroyPostLoad"));
     }
 
+    //Set up the islands depending on which chapter the user chose to play. 
     private void _setUpIslands() {
         
         _islands = new GameObject[MainMenu.roundAmount];

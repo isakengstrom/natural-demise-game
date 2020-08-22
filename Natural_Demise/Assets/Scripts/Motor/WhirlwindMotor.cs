@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Motor for the whirlwind
 public class WhirlwindMotor : BaseMotor {
-    
 
     protected override void Construct() {
         Mass = 0.3f;//Random.Range(0.03f, 0.09f);
         //gameObject.tag = "Whirlwind";
-       
-        //gameObject.transform.rotation = Quaternion.Euler(-Mathf.PI/2, 0,0);
     }
     
     protected override void SetState() {

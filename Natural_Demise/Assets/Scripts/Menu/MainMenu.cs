@@ -6,13 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
-   private int _chaptersAmount;
-   public static int currentChapter;
-   public static GameObject currentChapterIsland;
-   
-   public static int roundAmount;
-   public int[] roundHighscores;
-   private static int _saveCounter;
 
    //Chapter parameters 
    [SerializeField] public GameObject chapter0;
@@ -21,7 +14,15 @@ public class MainMenu : MonoBehaviour {
    
    private GameObject[] _chapters;
    private GameObject[] _chapterClones;
+   
+   private int _chaptersAmount;
+   public static int currentChapter;
+   public static GameObject currentChapterIsland;
 
+   //Round parameters
+   public static int roundAmount;
+   public int[] roundHighscores;
+   
    //UI parameters
    private GameObject _leftButton;
    private GameObject _rightButton;
@@ -58,6 +59,7 @@ public class MainMenu : MonoBehaviour {
       _activateCurrentIsland();
    }
 
+   //Update the highscore if the user beat their last highscore.
    private void _updateScore() {
       var lastPlayedLevel = PlayerPrefs.GetInt("LASTPLAYEDLEVEL", -1);
       
@@ -95,7 +97,7 @@ public class MainMenu : MonoBehaviour {
       SaveSystem.SaveLevels(this);
    }
    
-   
+   //Update the Main menu UI.
    private void _updateUI() {
       _checkArrowStatus();
 
@@ -103,6 +105,7 @@ public class MainMenu : MonoBehaviour {
       _roundText.SetText($"ROUND: {roundHighscores[currentChapter] + 1} / {roundAmount}");
    }
    
+   //Instantiate the Chapters specified in the inspector.
    private void _instantiateChapters() {
       _chapterClones = new GameObject[3];
       
@@ -112,6 +115,7 @@ public class MainMenu : MonoBehaviour {
       }
    }
 
+   //Display the correct chapter in the main menu.
    private void _activateCurrentIsland() {
       for (var i = 0; i < _chaptersAmount; i++) {
          if (i == currentChapter) _chapterClones[i].SetActive(true);
@@ -119,6 +123,7 @@ public class MainMenu : MonoBehaviour {
       }
    }
    
+   //Triggered when the user presses the "Play" button.
    public void PlayGame() {
       PlayerPrefs.SetInt("LASTPLAYEDLEVEL", currentChapter);
 
@@ -128,6 +133,7 @@ public class MainMenu : MonoBehaviour {
       SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
    }
 
+   //Triggered when the user presses the arrow to switch to the previous chapter.
    public void LeftArrow() {
       if (currentChapter > 0) {
          currentChapter--;
@@ -137,6 +143,7 @@ public class MainMenu : MonoBehaviour {
       _updateUI();
    }
 
+   //Triggered when the user presses the arrow to switch to the next chapter.
    public void RightArrow() {
       if (currentChapter < _chaptersAmount - 1) {
          currentChapter++;
@@ -146,6 +153,7 @@ public class MainMenu : MonoBehaviour {
       _updateUI();
    } 
 
+   //Deactivate left/right arrow button if they are at the leftmost/rightmost chapter.
    private void _checkArrowStatus() {
       _leftArrowState = true;
       _rightArrowState = true;
@@ -156,7 +164,6 @@ public class MainMenu : MonoBehaviour {
       _rightButton.SetActive(_rightArrowState);
    }
    
-
    public void QuitGame() {
       print("Quitting game..");
       Application.Quit();
