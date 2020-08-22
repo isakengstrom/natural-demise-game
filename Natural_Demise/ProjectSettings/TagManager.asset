@@ -11,6 +11,8 @@ TagManager:
   - Whirlwind
   - LevelManager
   - DestroyPostLoad
+  - MovePostLoad
+  - GameUI
   layers:
   - Default
   - TransparentFX

@@ -6,16 +6,15 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
     // Round parameters
     private readonly float countdownTilRound = 3f;
-    private readonly float countdownTilRoundEnds = 15f;
+    private readonly float countdownTilRoundEnds = 6.5f;
     private readonly float countdownTilPortalActive = 3f;
     
     // Island Parameters
     private Vector3[] _islandGlobalOrigins;
-    private int _islandAmount;
+    public static int islandAmount;
     private int _nextIslandIndex;
-    private int _currentIslandIndex;
-    public int roundData;
-    
+    public static int currentIslandIndex;
+
     // Portal parameters
     [SerializeField] public GameObject portalBegin;
     [SerializeField] public GameObject portalNormal;
@@ -35,6 +34,10 @@ public class LevelManager : MonoBehaviour {
     // Player parameters 
     private GameObject _player;
     private BaseMotor _baseMotor;
+    
+    // UI parameters
+    private InGameMenu _inGameMenu;
+    
 
     private void Start() {
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
@@ -44,10 +47,12 @@ public class LevelManager : MonoBehaviour {
         
         _player = GameObject.FindGameObjectWithTag("Player");
         _baseMotor = _player.GetComponent<BaseMotor>();
-        
+
+        _inGameMenu = GameObject.FindGameObjectWithTag("GameUI").GetComponent<InGameMenu>();
 
         _findIslandOrigins();
         _setUpPortals();
+        _inGameMenu.UpdateText();
 
         Invoke(nameof(_activateCurrentPortal), countdownTilPortalActive);
     }
@@ -64,7 +69,6 @@ public class LevelManager : MonoBehaviour {
     private void _startRound() {
         _stormCloud.ShrinkStormCloud();
         _storm.ActivateStorm();
-        print("roundstart");
     }
 
     private void _endRound() {
@@ -74,14 +78,14 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void _setUpPortals() {
-        _portalClones = new GameObject[_islandAmount];
-        _portalClonesScripts = new Portal[_islandAmount];
+        _portalClones = new GameObject[islandAmount];
+        _portalClonesScripts = new Portal[islandAmount];
         
-        _currentIslandIndex = 0;
+        currentIslandIndex = 0;
         _nextIslandIndex = 1;
-        for (var i = 0; i < _islandAmount; i++) {
+        for (var i = 0; i < islandAmount; i++) {
             if (i == 0) _portalChoice = portalBegin;
-            else if (i == _islandAmount - 1) _portalChoice = portalEnd;
+            else if (i == islandAmount - 1) _portalChoice = portalEnd;
             else _portalChoice = portalNormal;
             
             _portalClones[i] = (GameObject) Instantiate(_portalChoice, transform.GetChild(i));
@@ -97,16 +101,18 @@ public class LevelManager : MonoBehaviour {
         _setNextPortalIndex(portalName);
         _teleportPlayer();
         _setWindCenter();
-
+        _inGameMenu.UpdateText();
+        
         StartCoroutine(_fullRound());
         
-        _currentIslandIndex = _nextIslandIndex;
+        currentIslandIndex = _nextIslandIndex;
     }
-
+    
+    
     private void _checkLevelWin(string portalName) {
-        if (_portalClones[_islandAmount - 1].name == portalName) {
+        if (_portalClones[islandAmount - 1].name == portalName) {
             _saveRounds();
-            //TODO: TRIGGER win GUI
+            _inGameMenu.ActivateWonMenu();
         }
     }
     
@@ -114,12 +120,13 @@ public class LevelManager : MonoBehaviour {
     public void signalPlayerDeath() {
         _saveRounds();
         
-        //TODO: TRIGGER loose GUI
+        _inGameMenu.ActivateDeadMenu();
+        
         
     }
 
     private void _saveRounds() { 
-        PlayerPrefs.SetInt("ROUNDSCOUNTER", _currentIslandIndex);
+        PlayerPrefs.SetInt("ROUNDSCOUNTER", currentIslandIndex);
     }
 
     public void LoadMenu() {
@@ -127,13 +134,13 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void _activateCurrentPortal() {
-        _portalClonesScripts[_currentIslandIndex].ActivatePortal();
+        _portalClonesScripts[currentIslandIndex].ActivatePortal();
     }
     private void _setNextPortalIndex(string portalName) {
         var isPortalIdFound = false;
-        for (var i = 0; i < _islandAmount; i++) {
+        for (var i = 0; i < islandAmount; i++) {
             if (_portalClones[i].name != portalName) continue;
-            _nextIslandIndex = (i+1) % _islandAmount;
+            _nextIslandIndex = (i+1) % islandAmount;
             isPortalIdFound = true;
         }
 
@@ -152,10 +159,10 @@ public class LevelManager : MonoBehaviour {
     }
     
     private void _findIslandOrigins() {
-        _islandAmount = transform.childCount;
-        _islandGlobalOrigins = new Vector3[_islandAmount];
+        islandAmount = transform.childCount;
+        _islandGlobalOrigins = new Vector3[islandAmount];
         
-        for (var i = 0; i < _islandAmount; i++) {
+        for (var i = 0; i < islandAmount; i++) {
             _islandGlobalOrigins[i] = transform.GetChild(i).transform.position;
             transform.GetChild(i).name = "island" + i;
         }

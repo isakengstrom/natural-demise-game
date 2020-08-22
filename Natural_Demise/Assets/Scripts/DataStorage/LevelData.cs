@@ -17,20 +17,7 @@ public class LevelData {
 
         roundHighscores = data.roundHighscores;
         
-        if(score > roundHighscores[MainMenu.currentLevel])
-            roundHighscores[MainMenu.currentLevel] = score;
-    }
-    
-}
-/*
-[Serializable]
-public class SystemData {
-    public int saveCounter;
-
-    public SystemData(MainMenu mm) {
-        SystemData data = SaveSystem.LoadSystemData();
-
-        saveCounter = data.saveCounter;
+        if(score > roundHighscores[MainMenu.currentChapter])
+            roundHighscores[MainMenu.currentChapter] = score;
     }
 }
-*/
