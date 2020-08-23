@@ -26,10 +26,12 @@ public class MainMenu : MonoBehaviour {
    //UI parameters
    private GameObject _leftButton;
    private GameObject _rightButton;
+   private GameObject _playButton;
    private bool _leftArrowState;
    private bool _rightArrowState;
    private TextMeshProUGUI _chapterText;
    private TextMeshProUGUI _roundText;
+   private GameObject _clearFirstText;
    
    private void Start() {
       _chaptersAmount = 3;
@@ -40,9 +42,12 @@ public class MainMenu : MonoBehaviour {
       
       _leftButton = GameObject.Find("LeftButton");
       _rightButton = GameObject.Find("RightButton");
+      _playButton = GameObject.Find("PlayButton");
 
       _chapterText = GameObject.Find("ChapterText").GetComponent<TextMeshProUGUI>();
       _roundText = GameObject.Find("RoundText").GetComponent<TextMeshProUGUI>();
+      _clearFirstText = GameObject.Find("ClearFirstText");//.GetComponent<TextMeshProUGUI>();
+      _clearFirstText.SetActive(false);
       
       roundHighscores = new int[_chaptersAmount];
       
@@ -100,6 +105,7 @@ public class MainMenu : MonoBehaviour {
    //Update the Main menu UI.
    private void _updateUI() {
       _checkArrowStatus();
+      _checkChapterStatus();
 
       _chapterText.SetText($"CHAPTER: {currentChapter + 1} / {_chaptersAmount}");
       _roundText.SetText($"ROUND: {roundHighscores[currentChapter] + 1} / {roundAmount}");
@@ -162,6 +168,20 @@ public class MainMenu : MonoBehaviour {
 
       _leftButton.SetActive(_leftArrowState);
       _rightButton.SetActive(_rightArrowState);
+   }
+
+   private void _checkChapterStatus() {
+
+      if (currentChapter > 0) {
+         if (roundHighscores[currentChapter - 1] + 1 < roundAmount) {
+            _clearFirstText.SetActive(true);
+            _playButton.SetActive(false);
+            return;
+         }
+         
+      }
+      _clearFirstText.SetActive(false);
+      _playButton.SetActive(true);
    }
    
    public void QuitGame() {

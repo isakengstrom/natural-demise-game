@@ -10,7 +10,7 @@ public class PlayerMotor : CharacterMotor {
 
     //Construct the specific player parameters. 
     protected override void Construct() {
-        startHealth = 100.0f;
+        startHealth = 50.0f;
         Mass = 5.0f;
         base.Construct();
     }

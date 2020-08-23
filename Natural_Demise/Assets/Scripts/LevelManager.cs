@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
     // Round parameters
     private readonly float countdownTilRound = 3f;
-    private readonly float countdownTilRoundEnds = 6.5f;
+    private readonly float countdownTilRoundEnds = 4f;
     private readonly float countdownTilPortalActive = 3f;
     
     // Island Parameters
@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour {
     private GameObject _windCenter;
     private Storm _storm;
     private WindDirection _windDirection;
+    private WindForce _windForce;
     private StormCloudController _stormCloud;
 
     // Player parameters 
@@ -43,6 +44,7 @@ public class LevelManager : MonoBehaviour {
         _windCenter = GameObject.FindGameObjectWithTag("WindCenter");
         _storm = _windCenter.GetComponent<Storm>();
         _windDirection = _storm.GetComponent<WindDirection>();
+        _windForce = _storm.GetComponent<WindForce>();
         _stormCloud = _storm.stormCloud;
         
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -105,7 +107,7 @@ public class LevelManager : MonoBehaviour {
         
         _setNextPortalIndex(portalName);
         _teleportPlayer();
-        _setWindCenter();
+        _updateWind();
         _inGameMenu.UpdateText();
         
         StartCoroutine(_fullRound());
@@ -176,9 +178,10 @@ public class LevelManager : MonoBehaviour {
     }
 
     //Set the center for the storm/wind
-    private void _setWindCenter() {
+    private void _updateWind() {
         var correctedPos = new Vector3(_islandGlobalOrigins[_nextIslandIndex].x, _windCenter.transform.position.y, _islandGlobalOrigins[_nextIslandIndex].z);
         _windCenter.transform.position = correctedPos;
         _storm.SetStormCenterPosition(correctedPos);
+        _windForce.IncreaseWindForce();
     }
 }

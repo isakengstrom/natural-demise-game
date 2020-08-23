@@ -10,7 +10,7 @@ public class WindDirection : MonoBehaviour
     private Vector3 _windDirection;
     private GameObject _windSphere;
     private GameObject _windSpawnPoint;
-    private float _windRadius = 100f;
+    private float _windRadius = 40f;
 
     private float[] oldWind = new float[3];
     private float[] newWind = new float[3];
@@ -24,19 +24,6 @@ public class WindDirection : MonoBehaviour
     public Vector3 StormCenterPosition { get; set; }
 
     private void Start() {
-        /*
-        _windSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        _windSphere.transform.localScale = new Vector3(windRadius, windRadius, windRadius);
-        _windSphere.GetComponent<Collider>().enabled = false;
-        _windSphere.GetComponent<Renderer>().enabled = false;
-        */
-        
-        /*
-        _windSpawnPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        _windSpawnPoint.GetComponent<Collider>().enabled = false;
-        _windSpawnPoint.GetComponent<Renderer>().enabled = false;
-        _windSpawnPoint.transform.position = Vector3.zero;
-        */
 
         _force = GameObject.FindObjectOfType<WindForce>();
         _storm = GameObject.FindObjectOfType<Storm>();
@@ -62,8 +49,10 @@ public class WindDirection : MonoBehaviour
         windDirChange[0] = SmoothFloat(oldWind[0], newWind[0], smoothStepTime[0], startTime[0]);
         windDirChange[1] = SmoothFloat(oldWind[1], newWind[1], smoothStepTime[1] / 3, startTime[1]);
         windDirChange[2] = SmoothFloat(oldWind[2], newWind[2], 0.5f, startTime[2]);
-        
-        _rayStartingPoint = StormCenterPosition + new Vector3(Mathf.Cos(windDirChange[0] + windDirChange[1] + windDirChange[2]), 0, Mathf.Sin(windDirChange[0] + windDirChange[1] + windDirChange[2])) * _windRadius;
+
+        _rayStartingPoint = StormCenterPosition +
+                            new Vector3(Mathf.Cos(windDirChange[0] + windDirChange[1] + windDirChange[2]), 0,
+                                Mathf.Sin(windDirChange[0] + windDirChange[1] + windDirChange[2])) * _windRadius;
 
         //_windSpawnPoint.transform.position = _rayStartingPoint;
         _windDirection = transform.localPosition - _rayStartingPoint;
@@ -94,7 +83,7 @@ public class WindDirection : MonoBehaviour
     }
 
     private void _setWindDirectionAndInvokeBig() {
-        smoothStepTime[2] = Random.Range(45.0f, 65.0f);
+        smoothStepTime[2] = Random.Range(20.0f, 40.0f);
         //smoothStepTime[2] = Random.Range(2.0f, 5.0f);
 
         oldWind[2] = newWind[2];

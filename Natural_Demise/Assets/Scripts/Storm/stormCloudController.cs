@@ -7,10 +7,10 @@ using UnityEngine;
 public class StormCloudController : MonoBehaviour {
     
     public GameObject stormCloud;
-    private float _stormCloudScaleMultiplierWhenHidden = 300f;
+    private readonly float _stormCloudScaleMultiplierWhenHidden = 300f;
     private Vector3 _stormCloudScaleWhenHidden;
     private Vector3 _stormCloudScaleWhenVisible;
-    private float _stormCloudScaleTime = 3f;
+    private readonly float _stormCloudScaleTime = 3f;
 
     private void Start() {
         ActivateStormCloud();

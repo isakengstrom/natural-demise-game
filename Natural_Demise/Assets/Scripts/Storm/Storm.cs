@@ -47,6 +47,7 @@ public class Storm : MonoBehaviour {
         _windHowlMaxVolume = _windHowl.volume;
         
         _isStormActive = false;
+        _force.PauseWindForce();
 
         _particleSpawnTimer = 2.0f;
         _particleSpawnOffset = new Vector3(0.0f,1.0f,0.0f);
@@ -55,22 +56,37 @@ public class Storm : MonoBehaviour {
         _debrisSpawnOffset = new Vector3(0.0f, 1.0f, 0.0f);
         
         _whirlwindSpawnTimer = 2.0f;
-        _whirlwindSpawnOffset = new Vector3(0.0f, 0.0f, 0.0f);
+        _whirlwindSpawnOffset = new Vector3(0.0f, -1.0f, 0.0f);
     }
 
     public void ActivateStorm() {
         _isStormActive = true;
+        _force.ResumeWindForce();
         
         _invokeStorm();
         
         StartCoroutine(AudioFade.FadeIn(_windHowl, 3f, _windHowlMaxVolume));
-
     }
 
     public void DeactivateStorm() {
         _isStormActive = false;
         
+
+        StartCoroutine(_destroyClones());
+        
         StartCoroutine(AudioFade.FadeOut(_windHowl, 3f));
+    }
+
+    private IEnumerator _destroyClones() {
+        
+        yield return  new WaitForSeconds(3f);
+
+        foreach (Transform child in GameObject.Find("CloneContainer").transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+        
+        yield return new WaitForSeconds(1f);
+        _force.PauseWindForce();
     }
     
     
@@ -86,7 +102,7 @@ public class Storm : MonoBehaviour {
         _debrisSpawnOffset.x = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
         _debrisSpawnOffset.z = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
 
-        _debrisClone = (GameObject)Instantiate(debris, _direction.GetWindStartingPoint() + _debrisSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), debris.transform.rotation, transform);
+        _debrisClone = (GameObject)Instantiate(debris, _direction.GetWindStartingPoint() + _debrisSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), debris.transform.rotation, transform.GetChild(1));
         Destroy(_debrisClone, 20);
 
         if (_isStormActive) Invoke(nameof(_addDebris), _debrisSpawnTimer);
@@ -97,9 +113,8 @@ public class Storm : MonoBehaviour {
 
         _whirlwindSpawnOffset.x = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
         _whirlwindSpawnOffset.z = Random.Range(-_spawnPlaneWidth / 2, _spawnPlaneWidth / 2);
-        
-        
-        _whirlwindClone = (GameObject) Instantiate(whirlwind, _direction.GetWindStartingPoint() + _whirlwindSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), whirlwind.transform.rotation, transform);
+
+        _whirlwindClone = (GameObject) Instantiate(whirlwind, _direction.GetWindStartingPoint() + _whirlwindSpawnOffset + new Vector3(3.0f + Random.Range(0.0f, 4.0f), 0.0f, 3.0f + Random.Range(0.0f, 4.0f)), whirlwind.transform.rotation, transform.GetChild(1));
         Destroy(_whirlwindClone, 20);
 
         if (_isStormActive) Invoke(nameof(_addWhirlWinds), _whirlwindSpawnTimer);
@@ -114,7 +129,7 @@ public class Storm : MonoBehaviour {
         _particleCounter = (int)Random.Range(1.0f, 4.0f);
 
         for(var i = 0; i < _particleCounter; ++i) {
-            _particleClone = (GameObject)Instantiate(particle, _direction.GetWindStartingPoint() + _particleSpawnOffset + new Vector3(3.0f + _particleCounter + Random.Range(0.0f,4.0f), 0.0f, 3.0f + _particleCounter + Random.Range(0.0f, 4.0f)), particle.transform.rotation, transform);
+            _particleClone = (GameObject)Instantiate(particle, _direction.GetWindStartingPoint() + _particleSpawnOffset + new Vector3(3.0f + _particleCounter + Random.Range(0.0f,4.0f), 0.0f, 3.0f + _particleCounter + Random.Range(0.0f, 4.0f)), particle.transform.rotation, transform.GetChild(1));
             Destroy(_particleClone, 3);
         }
 

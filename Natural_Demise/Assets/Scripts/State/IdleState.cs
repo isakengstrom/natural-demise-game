@@ -24,7 +24,6 @@ public class IdleState : BaseState {
         CheckFallingState();
         CheckWalkingState();
         CheckRunningState();
-        
         CheckJumpingState();
         CheckDyingState();
     }
