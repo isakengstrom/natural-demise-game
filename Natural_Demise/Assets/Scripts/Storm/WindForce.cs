@@ -23,12 +23,10 @@ public class WindForce : MonoBehaviour
     public void WindDirectionChange() {
         //temporarly decrease windforce
         //Debug.Log("Major change in wind direction.");
-
-
     }
 
     public void IncreaseWindForce() {
-        _activeWindForce *= 1f;
+        _activeWindForce *= 1.1f;
         //print(_activeWindForce);
     }
 

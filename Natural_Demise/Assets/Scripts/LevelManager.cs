@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
     // Round parameters
     private readonly float countdownTilRound = 3f;
-    private readonly float countdownTilRoundEnds = 4f;
+    private readonly float countdownTilRoundEnds = 15f;
     private readonly float countdownTilPortalActive = 3f;
     
     // Island Parameters
