@@ -13,6 +13,7 @@ TagManager:
   - DestroyPostLoad
   - MovePostLoad
   - GameUI
+  - FallBorder
   layers:
   - Default
   - TransparentFX

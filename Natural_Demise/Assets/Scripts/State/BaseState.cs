@@ -6,12 +6,15 @@ public abstract class BaseState : MonoBehaviour {
     
     protected BaseMotor motor;
     protected LevelManager levelManager;
+    protected float? fallingTimer; 
     
     #region baseState implementation 
 
     public virtual void Construct() {
         motor = GetComponent<BaseMotor>();
         levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+
+        fallingTimer = null;
     }
 
     public virtual void Destruct() {

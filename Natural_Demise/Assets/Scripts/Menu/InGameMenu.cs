@@ -18,9 +18,16 @@ public class InGameMenu : MonoBehaviour {
     private TextMeshProUGUI _roundText;
     private TextMeshProUGUI _roundTextPaused;
 
+    private AudioSource[] _allAudioSources;
+    private bool _wasAudioPlaying;
+    
+    
     private void Start() {
         _roundText = GameObject.Find("RoundTextActiveMod").GetComponent<TextMeshProUGUI>();
         _roundTextPaused = GameObject.Find("RoundTextPaused").GetComponent<TextMeshProUGUI>();
+        
+        _allAudioSources = FindObjectsOfType<AudioSource>() as AudioSource[];
+        _wasAudioPlaying = false;
         
         Resume();
     }
@@ -89,12 +96,33 @@ public class InGameMenu : MonoBehaviour {
     private void _stopTime() {
         Time.timeScale = 0f;
         isGamePaused = true;
+        _pauseAudio();
     }
 
     //Start the game time
     private void _startTime() {
         Time.timeScale = 1f;
         isGamePaused = false;
+        _startAudio();
+    }
+    
+    private void _pauseAudio() {
+        foreach(var audioS  in _allAudioSources) {
+            if (audioS.isPlaying) {
+                audioS.Pause();
+                _wasAudioPlaying = true;
+            }
+        }
+    }
+
+    private void _startAudio() {
+        foreach(var audioS  in _allAudioSources) {
+            if (_wasAudioPlaying) {
+                audioS.Play();
+                _wasAudioPlaying = false;
+            }
+                
+        }
     }
     
 

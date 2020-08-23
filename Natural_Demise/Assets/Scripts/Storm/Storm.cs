@@ -11,6 +11,10 @@ public class Storm : MonoBehaviour {
     private GameObject _spawnPlane;
     private readonly float _spawnPlaneWidth = 40.0f;
 
+    
+    private AudioSource _windHowl;
+    private float _windHowlMaxVolume;
+    
     //Declaration for wind particles
     private int _particleCounter;
     private float _particleSpawnTimer;
@@ -19,7 +23,6 @@ public class Storm : MonoBehaviour {
     private GameObject _particleClone;
 
     //Declaration for debris (stones and such)
-    //private int debrisCounter;
     private float _debrisSpawnTimer;
     private Vector3 _debrisSpawnOffset;
     public GameObject debris;
@@ -39,6 +42,10 @@ public class Storm : MonoBehaviour {
 
     private void Start() {
         stormCloud = GetComponent<StormCloudController>();
+        
+        _windHowl = GetComponent<AudioSource>();
+        _windHowlMaxVolume = _windHowl.volume;
+        
         _isStormActive = false;
 
         _particleSpawnTimer = 2.0f;
@@ -55,11 +62,17 @@ public class Storm : MonoBehaviour {
         _isStormActive = true;
         
         _invokeStorm();
+        
+        StartCoroutine(AudioFade.FadeIn(_windHowl, 3f, _windHowlMaxVolume));
+
     }
 
     public void DeactivateStorm() {
         _isStormActive = false;
+        
+        StartCoroutine(AudioFade.FadeOut(_windHowl, 3f));
     }
+    
     
     private void _invokeStorm() {
         Invoke(nameof(_addDebris), _debrisSpawnTimer);

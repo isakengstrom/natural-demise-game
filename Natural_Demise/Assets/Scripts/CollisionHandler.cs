@@ -11,7 +11,7 @@ public class CollisionHandler : MonoBehaviour {
     }
     
     private void OnCollisionEnter(Collision collision) {
-        //Return if the player isn't involved with the collision
+        //Return if the player isn't involved in the collision
         if (!collision.gameObject.CompareTag("Player")) return;
     
         //Change the player health on collision 
@@ -22,7 +22,7 @@ public class CollisionHandler : MonoBehaviour {
         if (gameObject.CompareTag("Whirlwind")) {
             _cm.UpdateHealth(-10f);
         }
-        
+
         /*
         if (gameObject.CompareTag("HealthPack")) {
             _cm.UpdateHealth(1);
@@ -31,5 +31,12 @@ public class CollisionHandler : MonoBehaviour {
 
         //Destroy the object that collides with the player. 
         Destroy(gameObject);
+        
+    }
+    
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.CompareTag("Player"))
+            _cm.UpdateHealth(-1000f);
+
     }
 }

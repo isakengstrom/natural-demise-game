@@ -21,9 +21,10 @@ public class IdleState : BaseState {
     }
 
     public override void Transition() {
+        CheckFallingState();
         CheckWalkingState();
         CheckRunningState();
-        CheckFallingState();
+        
         CheckJumpingState();
         CheckDyingState();
     }
